@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>LBX Construtora — Sistema de Gestão</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  --azul:     #24354f;
+  --azul2:    #1a2740;
+  --azul3:    #0f1a2e;
+  --accent:   #4a8fe8;
+  --offwhite: #ede9dd;
+  --bg:       #f0f2f5;
+  --white:    #ffffff;
+  --verde:    #2d6a4f;
+  --red:      #b52a1c;
+  --amber:    #b45309;
+  --muted:    #6b7a8d;
+  --border:   #dde3ea;
+  --r:        12px;
+  --sh:       0 4px 24px rgba(36,53,79,.10);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--azul);
+  -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════════
+   TELA DE LOGIN
+═══════════════════════════════════════ */
+#tela-login {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, var(--azul3) 0%, var(--azul) 50%, #2e4a6e 100%);
+  padding: 24px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* fundo decorativo */
+#tela-login::before {
+  content: '';
+  position: absolute;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(74,143,232,.08) 0%, transparent 70%);
+  top: -200px; right: -200px;
+  pointer-events: none;
+}
+#tela-login::after {
+  content: '';
+  position: absolute;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(74,143,232,.06) 0%, transparent 70%);
+  bottom: -150px; left: -150px;
+  pointer-events: none;
+}
+
+.login-card {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 20px;
+  padding: 40px 36px 36px;
+  width: 100%;
+  max-width: 380px;
+  backdrop-filter: blur(12px);
+  position: relative;
+  z-index: 1;
+  animation: fadeUp .4s cubic-bezier(.4,0,.2,1);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.login-logo {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.login-lbx {
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: 10px;
+  color: var(--offwhite);
+  line-height: 1;
+}
+.login-sub {
+  font-size: 9px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: rgba(237,233,221,.4);
+  margin-top: 4px;
+  font-weight: 300;
+}
+.login-tagline {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(237,233,221,.3);
+  margin-top: 16px;
+}
+
+.login-field {
+  margin-bottom: 12px;
+}
+.login-field label {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(237,233,221,.5);
+  margin-bottom: 6px;
+}
+.login-input {
+  width: 100%;
+  padding: 13px 16px;
+  background: rgba(255,255,255,.07);
+  border: 1.5px solid rgba(255,255,255,.12);
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: 'DM Mono', monospace;
+  color: var(--offwhite);
+  outline: none;
+  transition: border-color .2s, background .2s;
+  letter-spacing: 1px;
+}
+.login-input::placeholder { color: rgba(237,233,221,.25); font-family: 'DM Sans', sans-serif; letter-spacing: 0; }
+.login-input:focus {
+  border-color: rgba(74,143,232,.6);
+  background: rgba(255,255,255,.1);
+}
+
+.login-erro {
+  color: #f87171;
+  font-size: 12px;
+  margin-bottom: 10px;
+  display: none;
+  text-align: center;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--accent);
+  border: none;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  letter-spacing: .5px;
+  transition: background .15s, transform .1s;
+  margin-top: 4px;
+}
+.login-btn:hover { background: #3a7fd8; }
+.login-btn:active { transform: scale(.98); }
+
+.login-obra-info {
+  display: none;
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: rgba(74,143,232,.12);
+  border: 1px solid rgba(74,143,232,.25);
+  border-radius: 10px;
+  text-align: center;
+}
+.login-obra-nome {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--offwhite);
+}
+.login-obra-cc {
+  font-size: 10px;
+  color: rgba(237,233,221,.5);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* ═══════════════════════════════════════
+   APP PRINCIPAL
+═══════════════════════════════════════ */
+#app {
+  display: none;
+  min-height: 100vh;
+  flex-direction: column;
+}
+#app.on { display: flex; }
+
+/* TOPBAR */
+.topbar {
+  background: var(--azul);
+  padding: 0 20px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  box-shadow: 0 2px 16px rgba(0,0,0,.2);
+  flex-shrink: 0;
+}
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+.topbar-lbx {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--offwhite);
+}
+.topbar-obra {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(237,233,221,.4);
+  border-left: 1px solid rgba(255,255,255,.1);
+  padding-left: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+.topbar-perfil {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(237,233,221,.55);
+  display: none;
+}
+@media(min-width: 480px) { .topbar-perfil { display: block; } }
+
+.btn-sair {
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.12);
+  color: rgba(237,233,221,.7);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s;
+  letter-spacing: .3px;
+}
+.btn-sair:hover { background: rgba(255,255,255,.14); }
+
+/* CONTEÚDO PRINCIPAL */
+.main-content {
+  flex: 1;
+  padding: 20px 16px;
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* SAUDAÇÃO */
+.saudacao {
+  margin-bottom: 20px;
+}
+.saudacao-titulo {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--azul);
+  line-height: 1.2;
+}
+.saudacao-sub {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 3px;
+  letter-spacing: .5px;
+}
+
+/* GRID DE MÓDULOS */
+.modulos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.modulo-card {
+  background: var(--white);
+  border-radius: var(--r);
+  border: 1.5px solid var(--border);
+  padding: 22px 20px;
+  cursor: pointer;
+  transition: all .18s;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--sh);
+}
+.modulo-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--azul);
+  border-radius: 12px 12px 0 0;
+}
+.modulo-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(36,53,79,.14);
+  border-color: rgba(36,53,79,.25);
+}
+.modulo-card:active { transform: translateY(-1px); }
+
+.modulo-card.verde::before { background: var(--verde); }
+.modulo-card.accent::before { background: var(--accent); }
+.modulo-card.amber::before { background: #d97706; }
+.modulo-card.purple::before { background: #7c3aed; }
+
+.modulo-icon { font-size: 32px; margin-bottom: 12px; }
+.modulo-nome {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--azul);
+  margin-bottom: 4px;
+}
+.modulo-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.modulo-tag {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--bg);
+  padding: 3px 8px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+}
+
+/* TELA DE MÓDULO (placeholder) */
+.tela-modulo {
+  display: none;
+  flex-direction: column;
+  min-height: calc(100vh - 56px);
+}
+.tela-modulo.on { display: flex; }
+
+.modulo-header {
+  background: var(--azul);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.modulo-header-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--offwhite);
+  flex: 1;
+}
+.btn-voltar {
+  background: rgba(255,255,255,.1);
+  border: none;
+  color: var(--offwhite);
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s;
+}
+.btn-voltar:hover { background: rgba(255,255,255,.18); }
+
+.modulo-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--muted);
+}
+.modulo-body-icon { font-size: 48px; margin-bottom: 16px; }
+.modulo-body-texto { font-size: 14px; line-height: 1.6; }
+
+/* ═══════════════════════════════════════
+   TELA ADMIN
+═══════════════════════════════════════ */
+#tela-admin {
+  display: none;
+  min-height: calc(100vh - 56px);
+  flex-direction: column;
+}
+#tela-admin.on { display: flex; }
+
+.admin-tabs {
+  display: flex;
+  background: var(--white);
+  border-bottom: 1.5px solid var(--border);
+  padding: 0 16px;
+  overflow-x: auto;
+  gap: 0;
+  flex-shrink: 0;
+}
+.admin-tab {
+  padding: 13px 18px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: all .15s;
+  letter-spacing: .3px;
+}
+.admin-tab.on {
+  color: var(--azul);
+  border-bottom-color: var(--azul);
+}
+.admin-tab:hover { color: var(--azul); }
+
+.admin-pane { display: none; padding: 20px 16px; max-width: 700px; margin: 0 auto; width: 100%; }
+.admin-pane.on { display: block; }
+
+/* Card admin */
+.admin-card {
+  background: var(--white);
+  border-radius: var(--r);
+  border: 1.5px solid var(--border);
+  box-shadow: var(--sh);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.admin-card-head {
+  background: #eef1f5;
+  padding: 10px 16px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--azul);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.admin-card-body { padding: 16px; }
+
+.field { margin-bottom: 13px; }
+.field:last-child { margin-bottom: 0; }
+.field label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+.field input, .field select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--azul);
+  background: var(--white);
+  outline: none;
+  transition: border-color .15s;
+}
+.field input:focus, .field select:focus { border-color: var(--azul); }
+.field input[readonly] { background: var(--bg); color: var(--muted); }
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+@media(max-width: 420px) { .field-row { grid-template-columns: 1fr; } }
+
+.btn-add {
+  padding: 10px 20px;
+  background: var(--azul);
+  border: none;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  transition: background .15s;
+  width: 100%;
+  margin-top: 4px;
+}
+.btn-add:hover { background: var(--azul2); }
+
+.senha-gerada {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  background: #eef1f5;
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: var(--azul);
+  letter-spacing: 1px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+.senha-copy {
+  font-size: 10px;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  font-family: 'DM Sans', sans-serif;
+  background: var(--white);
+  transition: all .1s;
+}
+.senha-copy:hover { background: var(--azul); color: #fff; border-color: var(--azul); }
+
+/* Lista de obras/usuários */
+.lista-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  transition: background .1s;
+}
+.lista-item:last-child { border-bottom: none; }
+.lista-item:hover { background: #f8f9fb; }
+.lista-item-icon {
+  width: 36px; height: 36px;
+  background: var(--azul);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.lista-item-info { flex: 1; min-width: 0; }
+.lista-item-nome {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--azul);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.lista-item-sub {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 1px;
+}
+.lista-item-cc {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  background: rgba(74,143,232,.08);
+  padding: 2px 8px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+.btn-del {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all .12s;
+}
+.btn-del:hover { border-color: var(--red); color: var(--red); }
+
+.lista-vazia {
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* Toast */
+.toast-ct {
+  position: fixed;
+  bottom: 20px; right: 20px;
+  display: flex; flex-direction: column; gap: 8px;
+  z-index: 9999;
+  pointer-events: none;
+}
+.toast {
+  background: var(--azul);
+  color: var(--offwhite);
+  padding: 11px 18px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 4px 20px rgba(0,0,0,.25);
+  animation: toastIn .25s ease;
+  max-width: 280px;
+}
+.toast.ok  { background: var(--verde); }
+.toast.err { background: var(--red); }
+@keyframes toastIn {
+  from { opacity:0; transform: translateY(12px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+
+/* Badge master */
+.badge-master {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #d97706, #f59e0b);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin-left: 6px;
+}
+
+
+
+
+
+
+/* ===== MODAL DE SENHA ===== */
+#senhaModal {
+  display: none; position: fixed; inset: 0; z-index: 9999;
+  background: rgba(26,42,58,.78); backdrop-filter: blur(5px);
+  align-items: center; justify-content: center;
+}
+#senhaModal.open { display: flex; }
+.senha-box {
+  background: #fff; border-radius: 16px;
+  padding: 36px 32px 28px; width: 320px;
+  box-shadow: 0 8px 48px rgba(0,0,0,.28);
+  text-align: center; font-family: 'Segoe UI', sans-serif;
+  animation: popIn .2s cubic-bezier(.4,0,.2,1);
+}
+@keyframes popIn { from{opacity:0;transform:scale(.94)} to{opacity:1;transform:scale(1)} }
+.senha-icon { font-size: 38px; margin-bottom: 8px; }
+.senha-perfil { font-size: 15px; font-weight: 700; color: #24354f; margin-bottom: 3px; }
+.senha-sub { font-size: 12px; color: #888; margin-bottom: 20px; }
+.senha-input {
+  width: 100%; padding: 11px 13px;
+  border: 1.5px solid #d0d8e4; border-radius: 8px;
+  font-size: 14px; font-family: inherit;
+  outline: none; margin-bottom: 7px; box-sizing: border-box;
+}
+.senha-input:focus { border-color: #24354f; }
+.senha-erro { color: #b52a1c; font-size: 12px; margin-bottom: 7px; display: none; }
+.senha-btns { display: flex; gap: 8px; margin-top: 4px; }
+.senha-btn-cancel {
+  flex: 1; padding: 10px; border: 1.5px solid #d0d8e4;
+  border-radius: 8px; background: #f5f6f8; color: #555;
+  font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer;
+}
+.senha-btn-ok {
+  flex: 1; padding: 10px; border: none;
+  border-radius: 8px; background: #24354f; color: #fff;
+  font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+}
+.senha-btn-ok:hover { background: #1a2740; }
+
+/* SELECTOR */
+
+/* ── LOADING IFRAME ── */
+.iframe-loading {
+  position: absolute; inset: 0;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 14px;
+  z-index: 10;
+}
+.loading-spinner {
+  width: 36px; height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--azul);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.iframe-loading-text {
+  font-size: 12px; color: var(--muted);
+  letter-spacing: .5px;
+}
+.tela-modulo { position: relative; }
+
+/* Responsive */
+@media(max-width: 480px) {
+  .login-card { padding: 32px 24px 28px; }
+  .login-lbx { font-size: 40px; letter-spacing: 8px; }
+  .saudacao-titulo { font-size: 18px; }
+  .modulos-grid { grid-template-columns: 1fr; }
+  .topbar-obra { display: none; }
+}
+</style>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyC9PuQvx_5x7FxWtBaI3s3Uwc_t-dkhcQ4",
+  authDomain: "lbx-log.firebaseapp.com",
+  projectId: "lbx-log",
+  storageBucket: "lbx-log.firebasestorage.app",
+  messagingSenderId: "1012729658432",
+  appId: "1:1012729658432:web:58ac3f74d11a69938373a5"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+</script>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     TELA DE LOGIN
+═══════════════════════════════════════ -->
+<div id="tela-login">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-lbx">LBX</div>
+      <div class="login-sub">Construtora</div>
+      <div class="login-tagline">Sistema de Gestão de Obra</div>
+    </div>
+
+    <div class="login-field">
+      <label>Senha de Acesso</label>
+      <input class="login-input" id="login-senha" type="password"
+        placeholder="Digite sua senha..."
+        onkeydown="if(event.key==='Enter') fazerLogin();">
+    </div>
+
+    <div class="login-erro" id="login-erro">❌ Senha não reconhecida. Tente novamente.</div>
+
+    <div class="login-obra-info" id="login-obra-preview"></div>
+
+    <button class="login-btn" onclick="fazerLogin()">Entrar</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     APP PRINCIPAL
+═══════════════════════════════════════ -->
+<div id="app">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-lbx">LBX</div>
+      <div class="topbar-obra" id="topbar-obra">—</div>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-perfil" id="topbar-perfil">—</span>
+      <button class="btn-sair" onclick="fazerLogout()">Sair</button>
+    </div>
+  </div>
+
+  <!-- HOME (dashboard / seletor de módulos) -->
+  <div id="tela-home" style="display:none">
+    <div class="main-content">
+      <div class="saudacao">
+        <div class="saudacao-titulo" id="saudacao-titulo">Olá!</div>
+        <div class="saudacao-sub" id="saudacao-sub">Selecione um módulo para continuar.</div>
+      </div>
+      <div class="modulos-grid" id="modulos-grid">
+        <!-- preenchido por JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- TELAS DE MÓDULOS (placeholders por ora) -->
+  <!-- Montagem de Kits (iframe) -->
+  <div id="tela-mod-kits" class="tela-modulo" style="display:none;flex-direction:column;min-height:calc(100vh - 56px)">
+    <iframe id="iframe-kits" data-key="kits" src="" style="flex:1;border:none;width:100%;min-height:calc(100vh - 56px)" allowfullscreen></iframe>
+  </div>
+
+  <!-- ═══ MÓDULO REQUISIÇÃO (iframe) ═══ -->
+  <div id="tela-mod-req" class="tela-modulo" style="display:none;flex-direction:column;min-height:calc(100vh - 56px)">
+    <iframe id="iframe-req" data-key="req" src="" style="flex:1;border:none;width:100%;min-height:calc(100vh - 56px)" allowfullscreen></iframe>
+  </div>
+
+  <!-- Etiquetas de Estoque (iframe) -->
+  <div id="tela-mod-etiq" class="tela-modulo" style="display:none;flex-direction:column;min-height:calc(100vh - 56px)">
+    <iframe id="iframe-etiq" data-key="etiq" src="" style="flex:1;border:none;width:100%;min-height:calc(100vh - 56px)" allowfullscreen></iframe>
+  </div>
+
+  <!-- Gestão Visual (iframe) -->
+  <div id="tela-mod-visual" class="tela-modulo" style="display:none;flex-direction:column;min-height:calc(100vh - 56px)">
+    <iframe id="iframe-visual" data-key="visual" src="" style="flex:1;border:none;width:100%;min-height:calc(100vh - 56px)" allowfullscreen></iframe>
+  </div>
+
+  <!-- Kanban de Compras (iframe) -->
+  <div id="tela-mod-kanban" class="tela-modulo" style="display:none;flex-direction:column;min-height:calc(100vh - 56px)">
+    <iframe id="iframe-kanban" data-key="kanban" src="" style="flex:1;border:none;width:100%;min-height:calc(100vh - 56px)" allowfullscreen></iframe>
+  </div>
+
+  <!-- ADMIN -->
+  <div id="tela-admin">
+    <div class="modulo-header">
+      <button class="btn-voltar" onclick="voltarHome()">← Voltar</button>
+      <div class="modulo-header-title">⚙️ Administração</div>
+    </div>
+
+    <div class="admin-tabs">
+      <div class="admin-tab on" onclick="adminTab('obras')">🏗 Obras</div>
+      <div class="admin-tab" onclick="adminTab('usuarios')">👤 Usuários</div>
+      <div class="admin-tab" onclick="adminTab('senhas')">🔑 Senhas</div>
+    </div>
+
+    <!-- ABA OBRAS -->
+    <div class="admin-pane on" id="pane-obras">
+      <div class="admin-card">
+        <div class="admin-card-head">Cadastrar Nova Obra</div>
+        <div class="admin-card-body">
+          <div class="field-row">
+            <div class="field">
+              <label>Nome da Obra</label>
+              <input type="text" id="obra-nome" placeholder="Ex: Forte de Arundel">
+            </div>
+            <div class="field">
+              <label>Cidade</label>
+              <input type="text" id="obra-cidade" placeholder="Ex: Maringá - PR">
+            </div>
+          </div>
+          <div class="field">
+            <label>Centro de Custo</label>
+            <input type="text" id="obra-cc" placeholder="Ex: 255" oninput="previewSenhas()">
+          </div>
+          <div id="preview-senhas" style="display:none;margin-bottom:12px">
+            <div style="font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Senhas que serão geradas</div>
+            <div id="preview-senhas-lista" style="display:flex;flex-direction:column;gap:6px;"></div>
+          </div>
+          <button class="btn-add" onclick="cadastrarObra()">+ Cadastrar Obra</button>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-head">
+          Obras Cadastradas
+          <span id="obras-count" style="font-size:11px;font-weight:400;color:var(--muted)">0 obras</span>
+        </div>
+        <div id="lista-obras"><div class="lista-vazia">Nenhuma obra cadastrada ainda.</div></div>
+      </div>
+    </div>
+
+    <!-- ABA USUÁRIOS -->
+    <div class="admin-pane" id="pane-usuarios">
+      <div class="admin-card">
+        <div class="admin-card-head">Cadastrar Usuário</div>
+        <div class="admin-card-body">
+          <div class="field">
+            <label>Obra</label>
+            <select id="usu-obra">
+              <option value="">— Selecione a obra —</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Nome do Usuário</label>
+            <input type="text" id="usu-nome" placeholder="Ex: João Silva">
+          </div>
+          <div class="field">
+            <label>Perfil</label>
+            <select id="usu-perfil" onchange="gerarSenhaUsuario()">
+              <option value="">— Selecione o perfil —</option>
+              <option value="encarregado">👷 Encarregado</option>
+              <option value="almoxarife">📦 Almoxarife</option>
+              <option value="lideranca">🏗 Liderança</option>
+              <option value="engenharia">⚙️ Engenharia</option>
+            </select>
+          </div>
+          <div class="field" id="usu-senha-wrap" style="display:none">
+            <label>Senha Gerada</label>
+            <div class="senha-gerada">
+              <span id="usu-senha-valor">—</span>
+              <button class="senha-copy" onclick="copiarSenha()">Copiar</button>
+            </div>
+          </div>
+          <button class="btn-add" onclick="cadastrarUsuario()">+ Cadastrar Usuário</button>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-head">
+          Usuários Cadastrados
+          <span id="usu-count" style="font-size:11px;font-weight:400;color:var(--muted)">0 usuários</span>
+        </div>
+        <div id="lista-usuarios"><div class="lista-vazia">Nenhum usuário cadastrado ainda.</div></div>
+      </div>
+    </div>
+
+    <!-- ABA SENHAS -->
+    <div class="admin-pane" id="pane-senhas">
+      <div class="admin-card">
+        <div class="admin-card-head">Padrão de Senhas por Perfil</div>
+        <div class="admin-card-body">
+          <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px;">
+            As senhas são geradas automaticamente com base no <strong>perfil</strong> + <strong>centro de custo</strong> da obra. Exemplo para CC <strong>255</strong>:
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px" id="tabela-senhas-padrao">
+            <!-- preenchido por JS -->
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-head">Senha Master</div>
+        <div class="admin-card-body">
+          <div style="font-size:13px;color:var(--muted);line-height:1.6;">
+            A senha master <strong style="color:var(--azul)">Supralog100314</strong> dá acesso total ao sistema — todas as obras, todos os módulos, painel de administração.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast-ct" id="toast-ct"></div>
+
+<script>
+// ═══════════════════════════════════════
+// DADOS E ESTADO
+// ═══════════════════════════════════════
+const SENHA_MASTER = 'Supralog100314';
+
+// Padrões de senha por perfil
+const PADROES_SENHA = {
+  encarregado: cc => `Enc${cc}`,
+  almoxarife:  cc => `Log@lmox${cc}`,
+  lideranca:   cc => `Liderlog${cc}`,
+  engenharia:  cc => `Kiteng${cc}`,
+};
+
+const PERFIS_LABEL = {
+  encarregado: '👷 Encarregado',
+  almoxarife:  '📦 Almoxarife',
+  lideranca:   '🏗 Liderança',
+  engenharia:  '⚙️ Engenharia',
+  master:      '👑 Master',
+};
+
+// Módulos disponíveis por perfil
+const MODULOS_POR_PERFIL = {
+  master:      ['kits','req','etiq','visual','kanban','admin'],
+  lideranca:   ['kits','req','visual','kanban'],
+  engenharia:  ['kits','req'],
+  almoxarife:  ['req','etiq'],
+  encarregado: ['req'],
+};
+
+const MODULOS_INFO = {
+  kits:   { id:'tela-mod-kits',   icon:'📦', nome:'Montagem de Kits',       desc:'Montar, versionar e gerenciar kits de materiais por atividade.',      cor:'',       tag:'Almoxarifado' },
+  req:    { id:'tela-mod-req',    icon:'📋', nome:'Requisição de Materiais', desc:'Solicitar kits ou materiais avulsos para a frente de obra.',           cor:'verde',  tag:'Obra' },
+  etiq:   { id:'tela-mod-etiq',   icon:'🏷️', nome:'Etiquetas de Estoque',   desc:'Gerar etiquetas de prateleira para identificação do almoxarifado.',    cor:'accent', tag:'Almoxarifado' },
+  visual: { id:'tela-mod-visual', icon:'🖼️', nome:'Gestão Visual',          desc:'Placas de sinalização e identificação de setores do almoxarifado.',    cor:'amber',  tag:'Impressão' },
+  kanban: { id:'tela-mod-kanban', icon:'📊', nome:'Kanban de Compras',       desc:'Acompanhar o fluxo de pedidos de compra em andamento.',                cor:'purple', tag:'Compras' },
+  admin:  { id:'tela-admin',      icon:'⚙️', nome:'Administração',           desc:'Cadastrar obras, usuários e gerenciar senhas do sistema.',             cor:'',       tag:'Master' },
+};
+
+// Estado da sessão
+let sessao = null; // { perfil, obra, cc }
+
+// Dados pré-cadastrados (obra padrão já incluída)
+const DADOS_PADRAO = {
+  obras: [
+    { id: 1, nome: 'Forte de Arundel', cidade: 'Maringá - PR', cc: '255' }
+  ],
+  usuarios: []
+};
+
+async function carregarDados() {
+  try {
+    const doc = await db.collection('sistema').doc('dados').get();
+    if (doc.exists) {
+      const d = doc.data();
+      return {
+        obras:    d.obras    || DADOS_PADRAO.obras,
+        usuarios: d.usuarios || [],
+      };
+    }
+    // Primeira vez: salva dados padrão
+    await salvarDados(DADOS_PADRAO);
+    return { obras: [...DADOS_PADRAO.obras], usuarios: [] };
+  } catch(e) {
+    console.warn('Firestore error, usando localStorage:', e);
+    const obras    = localStorage.getItem('lbx_obras');
+    const usuarios = localStorage.getItem('lbx_usuarios');
+    if (!obras) return { obras: [...DADOS_PADRAO.obras], usuarios: [] };
+    return {
+      obras:    JSON.parse(obras),
+      usuarios: usuarios ? JSON.parse(usuarios) : [],
+    };
+  }
+}
+
+async function salvarDados(dados) {
+  try {
+    await db.collection('sistema').doc('dados').set({
+      obras:    dados.obras    || [],
+      usuarios: dados.usuarios || [],
+    });
+    // Backup localStorage
+    localStorage.setItem('lbx_obras',    JSON.stringify(dados.obras));
+    localStorage.setItem('lbx_usuarios', JSON.stringify(dados.usuarios));
+  } catch(e) {
+    console.warn('Firestore write error:', e);
+    localStorage.setItem('lbx_obras',    JSON.stringify(dados.obras));
+    localStorage.setItem('lbx_usuarios', JSON.stringify(dados.obras));
+  }
+}
+
+// ═══════════════════════════════════════
+// LOGIN
+// ═══════════════════════════════════════
+async function fazerLogin() {
+  const senha = document.getElementById('login-senha').value.trim();
+  const erro  = document.getElementById('login-erro');
+  if (!senha) return;
+
+  erro.style.display = 'none';
+
+  // Senha master
+  if (senha === SENHA_MASTER) {
+    sessao = { perfil: 'master', obra: 'Todas as Obras', cc: 'MASTER' };
+    entrarApp();
+    return;
+  }
+
+  // Busca nos usuários cadastrados
+  const dados = await carregarDados();
+  for (const obra of dados.obras) {
+    for (const perfil of Object.keys(PADROES_SENHA)) {
+      if (PADROES_SENHA[perfil](obra.cc) === senha) {
+        sessao = { perfil, obra: obra.nome, cidade: obra.cidade, cc: obra.cc, obraId: obra.id };
+        entrarApp();
+        return;
+      }
+    }
+  }
+
+  erro.style.display = 'block';
+  document.getElementById('login-senha').value = '';
+  document.getElementById('login-senha').focus();
+}
+
+function entrarApp() {
+  document.getElementById('tela-login').style.display = 'none';
+  document.getElementById('app').classList.add('on');
+
+  // Topbar
+  const obraTexto = sessao.cc === 'MASTER'
+    ? 'Todas as Obras'
+    : `${sessao.obra} · CC ${sessao.cc}`;
+  document.getElementById('topbar-obra').textContent = obraTexto;
+  document.getElementById('topbar-perfil').textContent = PERFIS_LABEL[sessao.perfil] || sessao.perfil;
+
+  mostrarHome();
+}
+
+function fazerLogout() {
+  sessao = null;
+  document.getElementById('app').classList.remove('on');
+  document.getElementById('tela-login').style.display = 'flex';
+  document.getElementById('login-senha').value = '';
+  document.getElementById('login-erro').style.display = 'none';
+  esconderTudo();
+}
+
+// ═══════════════════════════════════════
+// NAVEGAÇÃO
+// ═══════════════════════════════════════
+function esconderTudo() {
+  document.getElementById('tela-home').style.display = 'none';
+  document.getElementById('tela-admin').classList.remove('on');
+  document.querySelectorAll('.tela-modulo').forEach(t => {
+    t.classList.remove('on');
+    t.style.display = 'none';
+  });
+}
+
+function mostrarHome() {
+  esconderTudo();
+  document.getElementById('tela-home').style.display = 'block';
+
+  // Saudação
+  const hora = new Date().getHours();
+  const saud = hora < 12 ? 'Bom dia' : hora < 18 ? 'Boa tarde' : 'Boa noite';
+  document.getElementById('saudacao-titulo').innerHTML =
+    `${saud}! <span style="color:var(--muted);font-weight:400">${PERFIS_LABEL[sessao?.perfil] || ''}</span>${sessao?.perfil === 'master' ? '<span class="badge-master">Master</span>' : ''}`;
+  document.getElementById('saudacao-sub').textContent =
+    sessao?.cc === 'MASTER'
+      ? 'Acesso master — todas as obras disponíveis.'
+      : `${sessao?.obra} · ${sessao?.cidade || ''} · CC ${sessao?.cc}`;
+
+  // Monta módulos disponíveis
+  const modulos = MODULOS_POR_PERFIL[sessao?.perfil] || [];
+  const grid = document.getElementById('modulos-grid');
+  grid.innerHTML = modulos.map(key => {
+    const m = MODULOS_INFO[key];
+    return `
+      <div class="modulo-card ${m.cor}" onclick="abrirModulo('${key}')">
+        <div class="modulo-icon">${m.icon}</div>
+        <div class="modulo-nome">${m.nome}</div>
+        <div class="modulo-desc">${m.desc}</div>
+        <span class="modulo-tag">${m.tag}</span>
+      </div>`;
+  }).join('');
+}
+
+// Arquivos de cada módulo
+const MODULO_ARQUIVOS = {
+  req:    'LBX_Requisicao.html',
+  kits:   'LBX_Kits.html',
+  etiq:   'LBX_Etiquetas.html',
+  visual: 'LBX_Visual.html',
+  kanban: 'LBX_Kanban.html',
+};
+
+function abrirModulo(key) {
+  if (key === 'admin') {
+    esconderTudo();
+    document.getElementById('tela-admin').classList.add('on');
+    renderAdmin(); // async
+    return;
+  }
+  const arquivo = MODULO_ARQUIVOS[key];
+  if (arquivo) {
+    const perfil = sessao?.perfil || '';
+    const cc     = sessao?.cc || '';
+    window.open(arquivo + '?perfil=' + perfil + '&cc=' + cc, '_blank');
+    return;
+  }
+}
+
+function enviarSessaoIframe(iframe, key) {
+  const tela = MODULO_PERFIL_TELA[key]?.(sessao) || null;
+  iframe.contentWindow?.postMessage({
+    tipo: 'lbx-sessao',
+    perfil: sessao?.perfil,
+    obra:   sessao?.obra,
+    cc:     sessao?.cc,
+    tela:   tela,
+  }, '*');
+}
+
+// Ouve mensagem do módulo pedindo para voltar
+window.addEventListener('message', e => {
+  if (e.data?.tipo === 'lbx-voltar') voltarHome();
+  if (e.data?.tipo === 'lbx-pronto') {
+    // Módulo carregou e pediu a sessão
+    const iframe = document.querySelector('iframe[data-key="' + e.data.key + '"]');
+    if (iframe) enviarSessaoIframe(iframe, e.data.key);
+  }
+});
+
+function voltarHome() {
+  mostrarHome();
+}
+
+// ═══════════════════════════════════════
+// ADMIN
+// ═══════════════════════════════════════
+function adminTab(aba) {
+  document.querySelectorAll('.admin-tab').forEach((t, i) => {
+    t.classList.toggle('on', ['obras','usuarios','senhas'][i] === aba);
+  });
+  document.querySelectorAll('.admin-pane').forEach(p => p.classList.remove('on'));
+  document.getElementById('pane-' + aba).classList.add('on');
+
+  if (aba === 'senhas') renderTabelaSenhas();
+}
+
+async function renderAdmin() {
+  renderListaObras();
+  renderListaUsuarios();
+  popularSelectObras(); // async
+}
+
+// Preview senhas ao digitar CC
+function previewSenhas() {
+  const cc = document.getElementById('obra-cc').value.trim();
+  const wrap = document.getElementById('preview-senhas');
+  const lista = document.getElementById('preview-senhas-lista');
+  if (!cc) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  lista.innerHTML = Object.entries(PADROES_SENHA).map(([perfil, fn]) => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:#f8f9fb;border-radius:6px;border:1px solid var(--border)">
+      <span style="font-size:11px;color:var(--muted)">${PERFIS_LABEL[perfil]}</span>
+      <span style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--azul)">${fn(cc)}</span>
+    </div>
+  `).join('');
+}
+
+async function cadastrarObra() {
+  const nome   = document.getElementById('obra-nome').value.trim();
+  const cidade = document.getElementById('obra-cidade').value.trim();
+  const cc     = document.getElementById('obra-cc').value.trim();
+  if (!nome || !cc) { toast('Preencha nome e centro de custo.', 'err'); return; }
+
+  const dados = await carregarDados();
+  if (dados.obras.find(o => o.cc === cc)) {
+    toast(`CC ${cc} já está cadastrado.`, 'err'); return;
+  }
+
+  dados.obras.push({ id: Date.now(), nome, cidade, cc });
+  await salvarDados(dados);
+  document.getElementById('obra-nome').value = '';
+  document.getElementById('obra-cidade').value = '';
+  document.getElementById('obra-cc').value = '';
+  document.getElementById('preview-senhas').style.display = 'none';
+  renderListaObras();
+  popularSelectObras(); // async
+  toast(`✓ Obra ${nome} (CC ${cc}) cadastrada!`, 'ok');
+}
+
+async function renderListaObras() {
+  const dados = await carregarDados();
+  const el = document.getElementById('lista-obras');
+  document.getElementById('obras-count').textContent = `${dados.obras.length} obra${dados.obras.length !== 1 ? 's' : ''}`;
+  if (!dados.obras.length) {
+    el.innerHTML = '<div class="lista-vazia">Nenhuma obra cadastrada ainda.</div>'; return;
+  }
+  el.innerHTML = dados.obras.map(o => `
+    <div class="lista-item">
+      <div class="lista-item-icon">🏗</div>
+      <div class="lista-item-info">
+        <div class="lista-item-nome">${o.nome}</div>
+        <div class="lista-item-sub">${o.cidade || '—'}</div>
+      </div>
+      <span class="lista-item-cc">CC ${o.cc}</span>
+      <button class="btn-del" onclick="deletarObra(${o.id})" title="Remover">✕</button>
+    </div>`).join('');
+}
+
+async function deletarObra(id) {
+  if (!confirm('Remover esta obra? Os usuários vinculados também serão removidos.')) return;
+  const dados = await carregarDados();
+  dados.obras    = dados.obras.filter(o => o.id !== id);
+  dados.usuarios = dados.usuarios.filter(u => u.obraId !== id);
+  await salvarDados(dados);
+  renderListaObras();
+  renderListaUsuarios();
+  popularSelectObras(); // async
+  toast('Obra removida.', 'ok');
+}
+
+async function popularSelectObras() {
+  const dados = await carregarDados();
+  const sel = document.getElementById('usu-obra');
+  sel.innerHTML = '<option value="">— Selecione a obra —</option>' +
+    dados.obras.map(o => `<option value="${o.id}">${o.nome} (CC ${o.cc})</option>`).join('');
+}
+
+async function gerarSenhaUsuario() {
+  const obraId = document.getElementById('usu-obra').value;
+  const perfil = document.getElementById('usu-perfil').value;
+  const wrap   = document.getElementById('usu-senha-wrap');
+  if (!obraId || !perfil) { wrap.style.display = 'none'; return; }
+  const dados = await carregarDados();
+  const obra  = dados.obras.find(o => String(o.id) === String(obraId));
+  if (!obra) return;
+  const senha = PADROES_SENHA[perfil](obra.cc);
+  document.getElementById('usu-senha-valor').textContent = senha;
+  wrap.style.display = 'block';
+}
+
+document.addEventListener('change', e => {
+  if (e.target.id === 'usu-obra' || e.target.id === 'usu-perfil') gerarSenhaUsuario();
+});
+
+function copiarSenha() {
+  const val = document.getElementById('usu-senha-valor').textContent;
+  navigator.clipboard?.writeText(val).then(() => toast('Senha copiada!', 'ok'));
+}
+
+async function cadastrarUsuario() {
+  const obraId = document.getElementById('usu-obra').value;
+  const nome   = document.getElementById('usu-nome').value.trim();
+  const perfil = document.getElementById('usu-perfil').value;
+  if (!obraId || !nome || !perfil) { toast('Preencha todos os campos.', 'err'); return; }
+
+  const dados = await carregarDados();
+  const obra  = dados.obras.find(o => String(o.id) === String(obraId));
+  if (!obra) return;
+  const senha = PADROES_SENHA[perfil](obra.cc);
+  dados.usuarios.push({ id: Date.now(), nome, perfil, obraId: obra.id, obraNome: obra.nome, cc: obra.cc, senha });
+  await salvarDados(dados);
+  document.getElementById('usu-nome').value = '';
+  document.getElementById('usu-obra').value = '';
+  document.getElementById('usu-perfil').value = '';
+  document.getElementById('usu-senha-wrap').style.display = 'none';
+  renderListaUsuarios();
+  toast(`✓ Usuário ${nome} cadastrado!`, 'ok');
+}
+
+async function renderListaUsuarios() {
+  const dados = await carregarDados();
+  const el = document.getElementById('lista-usuarios');
+  document.getElementById('usu-count').textContent = `${dados.usuarios.length} usuário${dados.usuarios.length !== 1 ? 's' : ''}`;
+  if (!dados.usuarios.length) {
+    el.innerHTML = '<div class="lista-vazia">Nenhum usuário cadastrado ainda.</div>'; return;
+  }
+  el.innerHTML = dados.usuarios.map(u => `
+    <div class="lista-item">
+      <div class="lista-item-icon" style="font-size:16px">${PERFIS_LABEL[u.perfil]?.split(' ')[0] || '👤'}</div>
+      <div class="lista-item-info">
+        <div class="lista-item-nome">${u.nome}</div>
+        <div class="lista-item-sub">${PERFIS_LABEL[u.perfil] || u.perfil} · ${u.obraNome}</div>
+      </div>
+      <span class="lista-item-cc" style="font-family:'DM Mono',monospace;font-size:11px;">${u.senha}</span>
+      <button class="btn-del" onclick="deletarUsuario(${u.id})" title="Remover">✕</button>
+    </div>`).join('');
+}
+
+async function deletarUsuario(id) {
+  const dados = await carregarDados();
+  dados.usuarios = dados.usuarios.filter(u => u.id !== id);
+  await salvarDados(dados);
+  renderListaUsuarios();
+  toast('Usuário removido.', 'ok');
+}
+
+async function renderTabelaSenhas() {
+  const el = document.getElementById('tabela-senhas-padrao');
+  const ex = '255';
+  el.innerHTML = Object.entries(PADROES_SENHA).map(([perfil, fn]) => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#f8f9fb;border-radius:8px;border:1px solid var(--border)">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--azul)">${PERFIS_LABEL[perfil]}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px">Padrão: <code style="font-family:monospace">${fn('CC')}</code></div>
+      </div>
+      <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--accent)">${fn(ex)}</div>
+    </div>
+  `).join('') + `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:linear-gradient(90deg,rgba(217,119,6,.06),rgba(245,158,11,.06));border-radius:8px;border:1px solid rgba(217,119,6,.2)">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--azul)">👑 Master</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px">Acesso total — todas as obras</div>
+      </div>
+      <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:#d97706">Supralog100314</div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════
+function toast(msg, type = '') {
+  const ct = document.getElementById('toast-ct');
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  ct.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+window.lbxVoltarHome = function() { voltarHome(); };
+
+window.addEventListener('load', () => {
+  document.getElementById('login-senha').focus();
+});
+
+</script>
+</body>
+</html>

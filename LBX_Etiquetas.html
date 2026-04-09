@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LBX Construtora — Etiquetas de Estoque</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --azul:        #24354f;
+  --verde:       #003e51;
+  --azul-claro:  #e6f2fa;
+  --verde-claro: #e4efd4;
+  --offwhite:    #ede9dd;
+  --white:       #ffffff;
+  --border:      #d0dde8;
+  --text-main:   #1a2a3a;
+  --text-muted:  #5a7080;
+  --azul-light2: #f0f6fb;
+  --azul-mid:    #2d4a6e;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--offwhite);
+  color: var(--text-main);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+}
+
+/* ===== HEADER ===== */
+header {
+  background: var(--azul);
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 20px rgba(36,53,79,.25);
+}
+.header-inner {
+  max-width: 1400px; margin: 0 auto;
+  padding: 0 32px;
+  display: flex; align-items: stretch; justify-content: space-between; gap: 24px;
+}
+.logo-block {
+  display: flex; align-items: center; gap: 16px;
+  padding: 18px 28px 18px 0;
+  border-right: 1px solid rgba(255,255,255,.1);
+}
+.logo-lbx { font-weight: 600; font-size: 26px; letter-spacing: 4px; color: var(--offwhite); line-height: 1; text-transform: uppercase; }
+.logo-sub { font-size: 9px; letter-spacing: 5px; color: rgba(237,233,221,.5); text-transform: uppercase; margin-top: 3px; font-weight: 300; }
+.header-title { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: rgba(230,242,250,.6); font-weight: 400; align-self: center; padding-left: 16px; }
+.stats-bar { display: flex; align-items: stretch; margin-left: auto; }
+.stat { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 22px; border-left: 1px solid rgba(255,255,255,.08); min-width: 84px; }
+.stat-num { font-size: 24px; font-weight: 600; color: var(--offwhite); line-height: 1; }
+.stat-num.g { color: #7fcba0; }
+.stat-num.a { color: #f0c070; }
+.stat-label { font-size: 9px; color: rgba(230,242,250,.45); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 4px; font-weight: 300; }
+
+/* ===== CONTAINER ===== */
+.container { max-width: 1400px; margin: 0 auto; padding: 28px 24px; }
+
+.obra-strip {
+  background: var(--verde); color: var(--offwhite);
+  padding: 10px 18px; border-radius: 5px;
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 11px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 22px;
+}
+.obra-strip::before { content:''; width:7px; height:7px; background:#7fcba0; border-radius:50%; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.3)} }
+
+/* PROGRESS */
+.progress-section {
+  background: var(--white); border-radius: 8px; padding: 16px 22px;
+  margin-bottom: 22px; border: 1px solid var(--border);
+  display: flex; align-items: center; gap: 18px;
+}
+.progress-label { font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; }
+.progress-track { flex: 1; height: 5px; background: var(--azul-claro); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--verde), var(--azul-mid)); border-radius: 3px; transition: width .6s cubic-bezier(.4,0,.2,1); }
+.progress-pct { font-size: 12px; font-weight: 600; color: var(--azul); white-space: nowrap; min-width: 32px; text-align: right; }
+
+/* SIZE TOGGLE */
+.size-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px;
+}
+.size-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .18s;
+  color: var(--text-muted);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+}
+.size-btn.active {
+  background: var(--azul);
+  color: var(--offwhite);
+  box-shadow: 0 2px 8px rgba(36,53,79,.2);
+}
+.size-btn:not(.active):hover { background: var(--azul-claro); color: var(--azul); }
+.size-icon { font-size: 11px; opacity: .7; }
+
+/* TOOLBAR */
+.toolbar {
+  display: flex; gap: 10px; align-items: center; margin-bottom: 16px; flex-wrap: wrap;
+}
+.search-wrap { flex: 1; min-width: 240px; position: relative; }
+.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 13px; pointer-events: none; }
+.search-box {
+  width: 100%; background: var(--white); border: 1px solid var(--border);
+  border-radius: 7px; padding: 10px 14px 10px 36px;
+  color: var(--text-main); font-family: 'DM Sans', sans-serif; font-size: 13px;
+  outline: none; transition: border-color .2s, box-shadow .2s;
+}
+.search-box:focus { border-color: var(--azul); box-shadow: 0 0 0 3px rgba(36,53,79,.08); }
+.search-box::placeholder { color: var(--text-muted); }
+select.fsel {
+  background: var(--white); border: 1px solid var(--border); border-radius: 7px;
+  padding: 10px 13px; color: var(--text-main); font-family: 'DM Sans', sans-serif;
+  font-size: 12px; outline: none; cursor: pointer;
+}
+select.fsel:focus { border-color: var(--azul); }
+.btn {
+  padding: 10px 18px; border: none; border-radius: 7px;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all .18s; white-space: nowrap;
+}
+.btn-primary { background: var(--azul); color: var(--offwhite); }
+.btn-primary:hover { background: var(--verde); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(36,53,79,.2); }
+.btn-ghost { background: transparent; color: var(--azul); border: 1px solid var(--border); }
+.btn-ghost:hover { border-color: var(--azul); background: var(--azul-claro); }
+.btn-confirm { background: var(--verde); color: var(--offwhite); }
+.btn-confirm:hover { background: var(--azul-mid); transform: translateY(-1px); }
+.btn:disabled { opacity:.35; cursor:not-allowed; transform:none!important; box-shadow:none!important; }
+.sel-badge {
+  background: var(--azul-claro); color: var(--azul); border-radius: 20px;
+  padding: 6px 13px; font-size: 12px; font-weight: 600;
+  border: 1px solid rgba(36,53,79,.15); display: none;
+}
+.sel-badge.on { display: inline-block; }
+
+/* SEC DIVIDER */
+.sec-div { display: flex; align-items: center; gap: 12px; margin-bottom: 13px; }
+.sec-div-label { font-size: 10px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: var(--text-muted); white-space: nowrap; }
+.sec-div-line { flex: 1; height: 1px; background: var(--border); }
+
+/* TABLE */
+.table-wrap { background: var(--white); border-radius: 10px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 1px 4px rgba(36,53,79,.06); }
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: var(--azul); }
+thead th { padding: 11px 13px; text-align: left; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: rgba(230,242,250,.7); white-space: nowrap; }
+tbody tr { border-bottom: 1px solid var(--azul-claro); transition: background .1s; }
+tbody tr:hover { background: var(--azul-light2); }
+tbody tr:last-child { border-bottom: none; }
+td { padding: 9px 13px; font-size: 13px; vertical-align: middle; }
+.td-code { font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: .5px; }
+.td-name { font-weight: 500; max-width: 240px; line-height: 1.35; }
+.td-fam { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+.td-qty { font-size: 16px; font-weight: 600; color: var(--azul); }
+.td-unit { font-size: 10px; color: var(--text-muted); display: block; }
+.badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 4px; font-size: 10px; font-weight: 600; letter-spacing: .8px; text-transform: uppercase; white-space: nowrap; }
+.badge-pending { background: rgba(240,192,112,.15); color: #7a5000; border: 1px solid rgba(240,192,112,.4); }
+.badge-done { background: var(--verde-claro, #e4efd4); color: var(--verde); border: 1px solid rgba(0,62,81,.2); }
+input[type=checkbox] { width: 15px; height: 15px; accent-color: var(--azul); cursor: pointer; }
+.table-footer { padding: 9px 13px; font-size: 11px; color: var(--text-muted); text-align: right; background: var(--azul-light2); border-top: 1px solid var(--border); }
+
+/* ===== MODAL ===== */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(26,42,58,.75); backdrop-filter: blur(4px); z-index: 200; justify-content: center; align-items: flex-start; padding: 28px 16px; overflow-y: auto; }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--offwhite); border-radius: 12px; width: 100%; max-width: 980px; overflow: hidden; box-shadow: 0 24px 60px rgba(26,42,58,.35); animation: modalUp .25s cubic-bezier(.4,0,.2,1); }
+@keyframes modalUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+.modal-head { background: var(--azul); padding: 18px 26px; display: flex; align-items: center; justify-content: space-between; }
+.modal-head-title { font-size: 13px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--offwhite); }
+.modal-head-sub { font-size: 11px; color: rgba(237,233,221,.5); margin-top: 2px; letter-spacing: 1px; }
+.modal-close { background: rgba(255,255,255,.1); border: none; color: var(--offwhite); width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; transition: background .15s; }
+.modal-close:hover { background: rgba(255,255,255,.2); }
+
+/* SIZE INDICATOR IN MODAL */
+.modal-size-bar {
+  background: var(--azul-light2);
+  padding: 10px 26px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+  letter-spacing: .5px;
+}
+.modal-size-chip {
+  background: var(--azul);
+  color: var(--offwhite);
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.modal-body { padding: 22px 26px; max-height: 540px; overflow-y: auto; }
+
+/* ==============================
+   ETIQUETA PRATELEIRA 8x4cm
+   ============================== */
+.labels-grid-shelf {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.label-shelf {
+  width: 302px;
+  height: 151px;
+  background: var(--white);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(36,53,79,.18);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  page-break-inside: avoid;
+  break-inside: avoid;
+  border: 1px solid rgba(36,53,79,.1);
+  position: relative;
+}
+
+/* Topo: logo + família */
+.shelf-top {
+  padding: 8px 11px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  background: var(--white);
+}
+.shelf-logo {
+  font-size: 6.5px;
+  font-weight: 800;
+  letter-spacing: 3.5px;
+  color: var(--azul);
+  text-transform: uppercase;
+  line-height: 1;
+}
+.shelf-obra {
+  font-size: 5px;
+  color: var(--text-muted);
+  letter-spacing: .7px;
+  text-transform: uppercase;
+  margin-top: 2px;
+  opacity: .7;
+}
+.shelf-fam-pill {
+  font-size: 5px;
+  font-weight: 700;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  color: var(--azul);
+  background: var(--azul-claro);
+  padding: 2px 6px;
+  border-radius: 2px;
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border: 1px solid rgba(36,53,79,.12);
+}
+
+/* Divisor */
+.shelf-divider {
+  height: 1px;
+  background: linear-gradient(90deg, var(--border) 0%, transparent 100%);
+  margin: 0 11px;
+  flex-shrink: 0;
+}
+
+/* Meio: nome do produto */
+.shelf-body {
+  flex: 1;
+  padding: 7px 11px 5px;
+  display: flex;
+  align-items: center;
+}
+.shelf-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  letter-spacing: -.1px;
+}
+
+/* Rodapé: código em destaque */
+.shelf-footer {
+  background: var(--azul);
+  padding: 0;
+  display: flex;
+  align-items: stretch;
+  height: 40px;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+.shelf-footer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 18px,
+    rgba(255,255,255,.025) 18px,
+    rgba(255,255,255,.025) 19px
+  );
+  pointer-events: none;
+}
+.shelf-code-block {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 0;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+.shelf-code-label {
+  font-size: 5px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: rgba(237,233,221,.35);
+  text-transform: uppercase;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+.shelf-code {
+  font-size: 17px;
+  font-weight: 900;
+  color: var(--offwhite);
+  letter-spacing: 1.5px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.shelf-unit-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  border-left: 1px solid rgba(255,255,255,.08);
+  background: rgba(0,0,0,.15);
+  gap: 1px;
+}
+.shelf-unit-label {
+  font-size: 4.5px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(237,233,221,.3);
+  line-height: 1;
+}
+.shelf-unit {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(237,233,221,.75);
+  line-height: 1;
+}
+
+/* ==============================
+   ETIQUETA A4 — espelho da shelf
+   ============================== */
+.labels-grid-a4 {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.label-a4 {
+  width: 100%;
+  max-width: 860px;
+  background: var(--white);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(36,53,79,.16);
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 200px);
+  min-height: 400px;
+  page-break-inside: avoid;
+  break-inside: avoid;
+  border: 1px solid rgba(36,53,79,.1);
+}
+
+/* Topo: logo + família — espelho da shelf-top */
+.a4-top {
+  padding: 18px 24px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.a4-logo {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 5px;
+  color: var(--azul);
+  text-transform: uppercase;
+  line-height: 1;
+}
+.a4-obra {
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-top: 4px;
+  opacity: .65;
+}
+.a4-fam-pill {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--azul);
+  background: var(--azul-claro);
+  padding: 6px 14px;
+  border-radius: 4px;
+  border: 1px solid rgba(36,53,79,.12);
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Divisor */
+.a4-divider {
+  height: 1px;
+  background: linear-gradient(90deg, var(--border) 0%, transparent 100%);
+  margin: 0 24px;
+  flex-shrink: 0;
+}
+
+/* Corpo: nome do produto */
+.a4-body {
+  flex: 1;
+  padding: 16px 24px 12px;
+  display: flex;
+  align-items: center;
+}
+.a4-name {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.15;
+  letter-spacing: -.5px;
+}
+
+/* Rodapé: código grande em destaque — espelho da shelf-footer */
+.a4-footer {
+  background: var(--azul);
+  display: flex;
+  align-items: stretch;
+  height: 72px;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+.a4-footer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 32px,
+    rgba(255,255,255,.025) 32px,
+    rgba(255,255,255,.025) 33px
+  );
+  pointer-events: none;
+}
+.a4-code-block {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 28px;
+  gap: 3px;
+}
+.a4-code-label {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: rgba(237,233,221,.35);
+  text-transform: uppercase;
+  line-height: 1;
+}
+.a4-code {
+  font-size: 38px;
+  font-weight: 900;
+  color: var(--offwhite);
+  letter-spacing: 2px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.a4-unit-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 32px;
+  border-left: 1px solid rgba(255,255,255,.08);
+  background: rgba(0,0,0,.15);
+  gap: 3px;
+  min-width: 90px;
+}
+.a4-unit-label {
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(237,233,221,.3);
+  line-height: 1;
+}
+.a4-unit {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(237,233,221,.8);
+  line-height: 1;
+}
+
+/* ===== MODAL FOOTER ===== */
+.modal-foot {
+  padding: 16px 26px;
+  border-top: 1px solid var(--border);
+  display: flex; gap: 10px; justify-content: flex-end;
+  background: var(--white);
+}
+
+/* TOAST */
+.toast-ct { position: fixed; bottom: 22px; right: 22px; display: flex; flex-direction: column; gap: 8px; z-index: 999; }
+.toast {
+  background: var(--azul); color: var(--offwhite);
+  padding: 11px 16px; border-radius: 7px; font-size: 13px; font-weight: 500;
+  max-width: 300px; animation: toastIn .3s cubic-bezier(.4,0,.2,1);
+  box-shadow: 0 8px 24px rgba(36,53,79,.3); border-left: 4px solid var(--verde);
+}
+.toast.ok { border-left-color: #7fcba0; }
+@keyframes toastIn { from{opacity:0;transform:translateX(30px)} to{opacity:1;transform:translateX(0)} }
+
+/* ===== PRINT ===== */
+@media print {
+  @page { size: A4 landscape; margin: 0; }
+  html, body { margin: 0; padding: 0; }
+  body > *:not(.print-shelf):not(.print-a4) { display: none !important; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+  .print-shelf {
+    display: flex !important; flex-wrap: wrap; gap: 4mm; padding: 8mm; background: white;
+  }
+  .print-shelf .label-shelf { width: 80mm; height: 40mm; box-shadow: none; border: 0.3mm solid #ccc; border-radius: 1.5mm; }
+  .print-shelf .shelf-name { font-size: 7pt; }
+  .print-shelf .shelf-logo { font-size: 5.5pt; }
+  .print-shelf .shelf-obra { font-size: 4pt; }
+  .print-shelf .shelf-fam-pill { font-size: 4pt; }
+  .print-shelf .shelf-code { font-size: 13pt; }
+  .print-shelf .shelf-code-label { font-size: 4.5pt; }
+  .print-shelf .shelf-unit { font-size: 7pt; }
+  .print-shelf .shelf-unit-label { font-size: 4pt; }
+  .print-shelf .shelf-footer { height: 26pt; }
+
+  .print-a4 { display: block !important; margin: 0; padding: 0; }
+  .print-a4 .label-a4 {
+    display: flex !important;
+    flex-direction: column;
+    width: 297mm;
+    height: 210mm;
+    margin: 0; padding: 0;
+    box-sizing: border-box;
+    page-break-after: always;
+    break-after: page;
+    overflow: hidden;
+    border-radius: 0; box-shadow: none; border: none;
+  }
+  .print-a4 .label-a4:last-child { page-break-after: avoid; break-after: avoid; }
+  .print-a4 .a4-top    { padding: 10pt 24pt 6pt; flex-shrink: 0; }
+  .print-a4 .a4-divider { margin: 0 24pt; flex-shrink: 0; }
+  .print-a4 .a4-body   { flex: 1; padding: 0 24pt; display: flex; align-items: center; overflow: hidden; min-height: 0; }
+  .print-a4 .a4-footer { height: 80pt; flex-shrink: 0; }
+  .print-a4 .a4-name   { font-size: 54pt; line-height: 1.1; }
+  .print-a4 .a4-code   { font-size: 56pt; }
+  .print-a4 .a4-code-label { font-size: 8pt; }
+  .print-a4 .a4-code-block { padding: 0 24pt; }
+  .print-a4 .a4-logo { font-size: 12pt; }
+  .print-a4 .a4-obra { font-size: 7pt; }
+  .print-a4 .a4-fam-pill { font-size: 9pt; }
+  .print-a4 .a4-unit { font-size: 22pt; }
+  .print-a4 .a4-unit-label { font-size: 6pt; }
+  .print-a4 .a4-unit-block { padding: 0 24pt; min-width: 64pt; }
+}
+.print-shelf, .print-a4 { display: none; }
+
+/* ===== MODAL IMPORTACAO PDF ===== */
+.import-overlay { display: none; position: fixed; inset: 0; background: rgba(26,42,58,.75); backdrop-filter: blur(4px); z-index: 300; justify-content: center; align-items: center; padding: 28px 16px; }
+.import-overlay.open { display: flex; }
+.import-modal { background: var(--offwhite); border-radius: 12px; width: 100%; max-width: 620px; overflow: hidden; box-shadow: 0 24px 60px rgba(26,42,58,.35); animation: modalUp .25s cubic-bezier(.4,0,.2,1); }
+.import-head { background: var(--verde); padding: 18px 26px; display: flex; align-items: center; justify-content: space-between; }
+.import-head-title { font-size: 13px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--offwhite); }
+.import-head-sub { font-size: 11px; color: rgba(237,233,221,.55); margin-top: 2px; letter-spacing: 1px; }
+.import-body { padding: 26px 26px 10px; }
+.pdf-drop { border: 2.5px dashed var(--border); border-radius: 10px; padding: 44px 20px; text-align: center; cursor: pointer; transition: all .2s; background: var(--azul-light2); position: relative; }
+.pdf-drop.dragover { border-color: var(--verde); background: #e4efd4; }
+.pdf-drop input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.pdf-drop-icon { font-size: 40px; margin-bottom: 12px; display: block; }
+.pdf-drop-title { font-size: 15px; font-weight: 600; color: var(--azul); margin-bottom: 4px; }
+.pdf-drop-sub { font-size: 12px; color: var(--text-muted); }
+.import-progress { display: none; margin-top: 18px; padding-bottom: 6px; }
+.import-progress-bar { height: 5px; background: var(--azul-claro); border-radius: 3px; overflow: hidden; margin-bottom: 8px; }
+.import-progress-fill { height: 100%; background: linear-gradient(90deg, var(--verde), var(--azul-mid)); border-radius: 3px; transition: width .3s; width: 0%; }
+.import-progress-msg { font-size: 12px; color: var(--text-muted); text-align: center; }
+.import-footer { padding: 16px 26px 22px; display: flex; gap: 10px; justify-content: flex-end; align-items: center; }
+.import-feedback { font-size: 12px; color: var(--text-muted); flex: 1; }
+.import-feedback.ok { color: #2a7a50; font-weight: 600; }
+.import-feedback.err { color: #b03030; font-weight: 600; }
+/* ===== GATE DE SENHA ===== */
+#senhaGate {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(26,39,64,0.88);
+  backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+}
+#senhaGate.liberado { display: none; }
+.gate-box {
+  background: #fff; border-radius: 16px;
+  padding: 40px 36px 32px; width: 340px;
+  box-shadow: 0 8px 48px rgba(0,0,0,0.32);
+  text-align: center; font-family: 'DM Sans', sans-serif;
+}
+.gate-icon { font-size: 40px; margin-bottom: 10px; }
+.gate-title { font-size: 16px; font-weight: 700; color: #24354f; margin-bottom: 4px; }
+.gate-sub { font-size: 12px; color: #888; margin-bottom: 22px; }
+.gate-input {
+  width: 100%; padding: 12px 14px;
+  border: 1.5px solid #d0d8e4; border-radius: 8px;
+  font-size: 14px; font-family: 'DM Sans', sans-serif;
+  outline: none; margin-bottom: 8px; box-sizing: border-box;
+}
+.gate-input:focus { border-color: #24354f; }
+.gate-erro { color: #c0392b; font-size: 12px; margin-bottom: 8px; display: none; }
+.gate-btn {
+  width: 100%; padding: 12px; border: none; border-radius: 8px;
+  background: #24354f; color: #fff;
+  font-family: 'DM Sans', sans-serif; font-size: 14px;
+  font-weight: 600; cursor: pointer;
+}
+.gate-btn:hover { background: #1a2740; }
+
+.btn-menu {
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.2);
+  color: var(--offwhite, #ede9dd);
+  padding: 6px 13px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .15s;
+}
+.btn-menu:hover { background: rgba(255,255,255,.25); }
+</style><script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+
+<header class="no-print">
+  <div class="header-inner">
+    <div class="logo-block">
+      <div>
+        <div class="logo-lbx">LBX</div>
+        <div class="logo-sub">Construtora</div>
+      </div>
+      <div style="width:1px;height:32px;background:rgba(255,255,255,.15)"></div>
+      <div class="header-title">Gestão de Estoque</div>
+    </div>
+    <div style="background:var(--azul);padding:6px 16px;"></div><div style="background:#24354f;padding:6px 16px"><button class="btn-menu" onclick="voltarMenu()">⬅ Menu</button></div><div class="stats-bar">
+      <div class="stat"><div class="stat-num" id="sTotal">0</div><div class="stat-label">Insumos</div></div>
+      <div class="stat"><div class="stat-num g" id="sGeradas">0</div><div class="stat-label">Geradas</div></div>
+      <div class="stat"><div class="stat-num a" id="sPendentes">0</div><div class="stat-label">Pendentes</div></div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="obra-strip no-print">Obra 255 - MARINGA - FORTE DE ARUNDEL</div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;" class="no-print">
+    <div></div>
+    <button class="btn btn-confirm no-print" onclick="abrirImport()" style="display:flex;align-items:center;gap:8px;font-size:12px;">
+      <span style="font-size:16px;line-height:1">⬆</span> Importar PDF — Ordem de Compra ou Relatório de Estoque
+    </button>
+  </div>
+
+  <div class="progress-section no-print">
+    <div class="progress-label">Progresso</div>
+    <div class="progress-track"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+    <div class="progress-pct" id="progPct">0%</div>
+  </div>
+
+  <!-- SIZE TOGGLE + TOOLBAR -->
+  <div class="toolbar no-print">
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input class="search-box" type="text" id="searchInput" placeholder="Buscar insumo, código ou família...">
+    </div>
+    <select class="fsel" id="filterStatus">
+      <option value="">Todos os status</option>
+      <option value="pending">Pendentes</option>
+      <option value="done">✓ Geradas</option>
+    </select>
+    <select class="fsel" id="filterFamily" style="max-width:180px">
+      <option value="">Todas as famílias</option>
+    </select>
+    <div class="sel-badge" id="selBadge">0 selecionados</div>
+  </div>
+
+  <div class="toolbar no-print" style="margin-bottom:20px; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+    <!-- Seletor de tamanho -->
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;">Formato da etiqueta:</span>
+      <div class="size-toggle">
+        <button class="size-btn active" id="btnShelf" onclick="setSize('shelf')">
+          <span class="size-icon">▬</span> Prateleira 8×4 cm
+        </button>
+        <button class="size-btn" id="btnA4" onclick="setSize('a4')">
+          <span class="size-icon">▭</span> A4 Horizontal
+        </button>
+      </div>
+    </div>
+    <!-- Ações -->
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button class="btn btn-ghost" onclick="selecionarTodos()">Selecionar todos</button>
+      <button class="btn btn-ghost" onclick="limparSelecao()">Limpar</button>
+      <button class="btn btn-primary" id="btnGerar" onclick="abrirModal()" disabled>Gerar Etiquetas</button>
+      <button class="btn btn-ghost no-print" onclick="resetarHistorico()" style="color:#b52a1c;border-color:#f5d0cc;font-size:11px;" title="Apagar histórico de etiquetas geradas">🗑 Resetar Histórico</button>
+    </div>
+  </div>
+
+  <div class="sec-div no-print">
+    <span class="sec-div-label">Lista de Insumos</span>
+    <span class="sec-div-line"></span>
+    <span style="font-size:11px;color:var(--text-muted)" id="tableInfo"></span>
+  </div>
+
+  <div class="table-wrap no-print">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:36px"><input type="checkbox" id="checkAll" onchange="toggleAll(this)"></th>
+          <th>Código</th><th>Insumo</th><th>Família</th>
+          <th>Un.</th><th>Quantidade</th><th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <div class="table-footer" id="tableFooter"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay no-print" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <div class="modal-head-title">Pré-visualização das Etiquetas</div>
+        <div class="modal-head-sub" id="modalSubtitle"></div>
+      </div>
+      <button class="modal-close" onclick="fecharModal()">✕</button>
+    </div>
+    <div class="modal-size-bar">
+      <span>Formato:</span>
+      <span class="modal-size-chip" id="modalSizeChip">Prateleira 8×4 cm</span>
+    </div>
+    <div class="modal-body">
+      <div id="labelsContainer"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="fecharModal()">Cancelar</button>
+      <button class="btn btn-ghost" onclick="imprimirEConfirmar()">🖨 Imprimir</button>
+      <button class="btn btn-confirm" onclick="salvarPDFeConfirmar()">💾 Salvar PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL IMPORTACAO PDF -->
+<div class="import-overlay no-print" id="importOverlay">
+  <div class="import-modal">
+    <div class="import-head">
+      <div>
+        <div class="import-head-title">⬆ Importar PDF SIENGE</div>
+        <div class="import-head-sub">Ordem de Compra ou Relatório de Estoque — detecção automática</div>
+      </div>
+      <button class="modal-close" onclick="fecharImport()">✕</button>
+    </div>
+    <div class="import-body">
+      <div class="pdf-drop" id="pdfDrop">
+        <input type="file" accept=".pdf" id="pdfInput" />
+        <span class="pdf-drop-icon">📄</span>
+        <div class="pdf-drop-title">Arraste o PDF aqui ou clique para selecionar</div>
+        <div class="pdf-drop-sub">Ordem de Compra SIENGE · Relatório de Estoque SIENGE — detecção automática</div>
+      </div>
+      <div class="import-progress" id="importProgress">
+        <div class="import-progress-bar"><div class="import-progress-fill" id="importProgressFill"></div></div>
+        <div class="import-progress-msg" id="importProgressMsg">Processando...</div>
+      </div>
+    </div>
+    <div class="import-footer">
+      <div class="import-feedback" id="importFeedback"></div>
+      <button class="btn btn-ghost" onclick="fecharImport()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-ct" id="toastCt"></div>
+<div class="print-shelf" id="printShelf"></div>
+<div class="print-a4" id="printA4"></div>
+
+<script>
+const _CC_OBRA_ETIQ = new URLSearchParams(window.location.search).get('cc') || 'geral';
+const ALL = [];
+const OBRA = "255 - MARINGA - FORTE DE ARUNDEL";
+let generated = {};
+let pending = [];
+let currentSize = 'shelf'; // 'shelf' | 'a4'
+
+async function loadGen() {
+  try { const r = localStorage.getItem('lbx-gen-v3-' + _CC_OBRA_ETIQ); if(r) generated = JSON.parse(r); } catch(e) {}
+}
+async function saveGen() {
+  try { localStorage.setItem('lbx-gen-v3-' + _CC_OBRA_ETIQ, JSON.stringify(generated)); } catch(e) {}
+}
+
+(async function(){
+  await loadGen();
+  buildFamilyFilter();
+  renderTable();
+  updateStats();
+})();
+
+function setSize(size) {
+  currentSize = size;
+  document.getElementById('btnShelf').classList.toggle('active', size==='shelf');
+  document.getElementById('btnA4').classList.toggle('active', size==='a4');
+}
+
+function buildFamilyFilter() {
+  const fams = [...new Set(ALL.map(i=>i.family).filter(Boolean))].sort();
+  const sel = document.getElementById('filterFamily');
+  fams.forEach(f => {
+    const o = document.createElement('option');
+    o.value = f;
+    o.textContent = f.replace(/^[\d.]+\s*-\s*/,'').substring(0,28);
+    sel.appendChild(o);
+  });
+}
+
+document.getElementById('searchInput').addEventListener('input', renderTable);
+document.getElementById('filterStatus').addEventListener('change', renderTable);
+document.getElementById('filterFamily').addEventListener('change', renderTable);
+
+function getFiltered() {
+  const s = document.getElementById('searchInput').value.toLowerCase();
+  const st = document.getElementById('filterStatus').value;
+  const fam = document.getElementById('filterFamily').value;
+  return ALL.filter(i => {
+    if(s && !i.name.toLowerCase().includes(s) && !i.code.includes(s) && !(i.family||'').toLowerCase().includes(s)) return false;
+    if(st==='done' && !generated[i.code]) return false;
+    if(st==='pending' && generated[i.code]) return false;
+    if(fam && i.family !== fam) return false;
+    return true;
+  });
+}
+
+function renderTable() {
+  const items = getFiltered();
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = '';
+  if(!items.length) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:36px;color:var(--text-muted);font-size:13px;">Nenhum insumo encontrado</td></tr>`;
+    document.getElementById('tableInfo').textContent = '';
+    document.getElementById('tableFooter').textContent = '';
+    return;
+  }
+  items.forEach(item => {
+    const done = !!generated[item.code];
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="checkbox" class="ck" data-code="${item.code}" onchange="onCheck()"></td>
+      <td class="td-code">${item.code}</td>
+      <td><div class="td-name">${item.name}</div><div class="td-fam">${(item.family||'').replace(/^[\d.]+\s*-\s*/,'')}</div></td>
+      <td style="font-size:11px;color:var(--text-muted);max-width:130px;line-height:1.3">${(item.family||'').replace(/^[\d.]+\s*-\s*/,'')}</td>
+      <td><span style="font-size:12px;color:var(--text-muted)">${item.unit}</span></td>
+      <td><span class="td-qty">${fmtN(item.qty)}</span><span class="td-unit">${item.unit}</span></td>
+      <td>${done ? '<span class="badge badge-done">✈ Gerada</span>' : '<span class="badge badge-pending">○ Pendente</span>'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('tableInfo').textContent = `${items.length} de ${ALL.length} insumos`;
+  document.getElementById('tableFooter').textContent = `${items.length} itens listados`;
+}
+
+function onCheck() {
+  const n = document.querySelectorAll('.ck:checked').length;
+  const b = document.getElementById('selBadge');
+  b.textContent = `${n} selecionado${n!==1?'s':''}`;
+  b.classList.toggle('on', n>0);
+  document.getElementById('btnGerar').disabled = n===0;
+}
+function selecionarTodos() { document.querySelectorAll('.ck').forEach(c=>c.checked=true); onCheck(); }
+function limparSelecao() { document.querySelectorAll('.ck').forEach(c=>c.checked=false); document.getElementById('checkAll').checked=false; onCheck(); }
+function toggleAll(cb) { document.querySelectorAll('.ck').forEach(c=>c.checked=cb.checked); onCheck(); }
+
+/* ===== BUILD LABEL HTML ===== */
+function buildShelfLabel(item) {
+  const d = document.createElement('div');
+  d.className = 'label-shelf';
+  const fam = (item.family||'').replace(/^[\d.]+\s*-\s*/,'');
+  d.innerHTML = `
+    <div class="shelf-top">
+      <div>
+        <div class="shelf-logo">LBX Construtora</div>
+        <div class="shelf-obra">${OBRA}</div>
+      </div>
+      <div class="shelf-fam-pill">${fam}</div>
+    </div>
+    <div class="shelf-divider"></div>
+    <div class="shelf-body">
+      <div class="shelf-name">${item.name}</div>
+    </div>
+    <div class="shelf-footer">
+      <div class="shelf-code-block">
+        <span class="shelf-code-label">Código</span>
+        <span class="shelf-code">${item.code}</span>
+      </div>
+      <div class="shelf-unit-block">
+        <span class="shelf-unit-label">Un.</span>
+        <span class="shelf-unit">${item.unit}</span>
+      </div>
+    </div>
+  `;
+  return d;
+}
+
+function buildA4Label(item) {
+  const d = document.createElement('div');
+  d.className = 'label-a4';
+  const fam = (item.family||'').replace(/^[\d.]+\s*-\s*/,'');
+  d.innerHTML = `
+    <div class="a4-top">
+      <div>
+        <div class="a4-logo">LBX Construtora</div>
+        <div class="a4-obra">${OBRA}</div>
+      </div>
+      <div class="a4-fam-pill">${fam}</div>
+    </div>
+    <div class="a4-divider"></div>
+    <div class="a4-body">
+      <div class="a4-name">${item.name}</div>
+    </div>
+    <div class="a4-footer">
+      <div class="a4-code-block">
+        <span class="a4-code-label">Código</span>
+        <span class="a4-code">${item.code}</span>
+      </div>
+      <div class="a4-unit-block">
+        <span class="a4-unit-label">Un.</span>
+        <span class="a4-unit">${item.unit}</span>
+      </div>
+    </div>
+  `;
+  return d;
+}
+
+/* ===== MODAL ===== */
+async function abrirModal() {
+  const codes = [...document.querySelectorAll('.ck:checked')].map(c=>c.dataset.code);
+  if(!codes.length) return;
+  const selected = ALL.filter(i=>codes.includes(i.code));
+
+  // Separa novos dos já gerados
+  const jaGerados = selected.filter(i => generated[i.code]);
+  const novos     = selected.filter(i => !generated[i.code]);
+
+  // Se há itens já gerados, exibe confirmação antes
+  let confirmaRepeticao = [];
+  if(jaGerados.length) {
+    const lista = jaGerados.map(i =>
+      `• ${i.code} — ${i.name.substring(0,40)} (gerada em ${generated[i.code]?.date||'?'})`
+    ).join('\n');
+    const resp = confirm(
+      `⚠️ ${jaGerados.length} etiqueta${jaGerados.length>1?'s já foram geradas':'já foi gerada'} anteriormente:\n\n${lista}\n\nDeseja gerar novamente?`
+    );
+    if(resp) confirmaRepeticao = jaGerados;
+    // Se não, apenas ignora os já gerados
+  }
+
+  pending = [...novos, ...confirmaRepeticao];
+  if(!pending.length) {
+    toast('Nenhuma etiqueta nova para gerar.', '');
+    return;
+  }
+
+  document.getElementById('modalSubtitle').textContent = `${pending.length} ${pending.length===1?'item':'itens'} · Formato: ${currentSize==='shelf'?'Prateleira 8×4 cm':'A4 Horizontal'}`;
+  document.getElementById('modalSizeChip').textContent = currentSize==='shelf' ? 'Prateleira 8×4 cm' : 'A4 Horizontal';
+
+  const container = document.getElementById('labelsContainer');
+  container.innerHTML = '';
+
+  if(currentSize === 'shelf') {
+    const grid = document.createElement('div');
+    grid.className = 'labels-grid-shelf';
+    pending.forEach(item => grid.appendChild(buildShelfLabel(item)));
+    container.appendChild(grid);
+  } else {
+    const grid = document.createElement('div');
+    grid.className = 'labels-grid-a4';
+    pending.forEach(item => grid.appendChild(buildA4Label(item)));
+    container.appendChild(grid);
+  }
+
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function fecharModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  pending = [];
+}
+
+// Registra no histórico e atualiza UI
+async function registrarGeradas() {
+  const today = new Date().toLocaleDateString('pt-BR');
+  pending.forEach(i => { generated[i.code] = { date: today, name: i.name }; });
+  await saveGen();
+  limparSelecao();
+  renderTable();
+  updateStats();
+  const n = pending.length;
+  toast(`✈ ${n} etiqueta${n!==1?'s':''} registrada${n!==1?'s':''} como gerada${n!==1?'s':''}`, 'ok');
+}
+
+// Imprimir e registrar automaticamente
+function abrirJanelaImpressao() {
+  // Monta HTML das etiquetas
+  let labelsHtml = '';
+  if(currentSize === 'shelf') {
+    const div = document.createElement('div');
+    div.className = 'wrap-shelf';
+    pending.forEach(item => div.appendChild(buildShelfLabel(item)));
+    labelsHtml = div.outerHTML;
+  } else {
+    const div = document.createElement('div');
+    div.className = 'wrap-a4';
+    pending.forEach(item => div.appendChild(buildA4Label(item)));
+    labelsHtml = div.outerHTML;
+  }
+
+  const CSS = `
+    @page { size: A4 landscape; margin: 0; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { margin: 0; padding: 0; background: white; font-family: 'Segoe UI', Arial, sans-serif; }
+
+    /* VARIÁVEIS */
+    :root {
+      --azul: #24354f; --azul-mid: #2e4a6e; --offwhite: #ede9dd;
+      --white: #fff; --text-main: #1a2a3a; --text-muted: #6b7a8d;
+      --border: #dde3ea; --verde: #2d6a4f;
+    }
+
+    /* SHELF */
+    .wrap-shelf { display: flex; flex-wrap: wrap; gap: 4mm; padding: 8mm; }
+    .label-shelf { width: 80mm; height: 40mm; display: flex; flex-direction: column; overflow: hidden; border: 0.3mm solid #ccc; border-radius: 1.5mm; }
+    .shelf-top { display: flex; align-items: flex-start; justify-content: space-between; padding: 3pt 5pt 2pt; flex-shrink: 0; }
+    .shelf-logo { font-size: 5.5pt; font-weight: 700; color: var(--azul); letter-spacing: 1.5px; text-transform: uppercase; }
+    .shelf-obra { font-size: 4pt; color: var(--text-muted); margin-top: 1pt; }
+    .shelf-fam-pill { font-size: 4pt; background: var(--offwhite); color: var(--azul); padding: 1pt 4pt; border-radius: 3pt; border: 0.3mm solid var(--border); white-space: nowrap; }
+    .shelf-divider { height: 0.3mm; background: var(--border); margin: 0 5pt; flex-shrink: 0; }
+    .shelf-body { flex: 1; padding: 3pt 5pt; display: flex; align-items: center; overflow: hidden; }
+    .shelf-name { font-size: 7pt; font-weight: 800; color: var(--text-main); line-height: 1.2; }
+    .shelf-footer { height: 26pt; background: var(--azul); display: flex; align-items: center; justify-content: space-between; padding: 0 5pt; flex-shrink: 0; }
+    .shelf-code-block { display: flex; flex-direction: column; }
+    .shelf-code-label { font-size: 4.5pt; color: var(--offwhite); opacity: .7; letter-spacing: .5px; text-transform: uppercase; }
+    .shelf-code { font-size: 13pt; font-weight: 800; color: var(--offwhite); letter-spacing: -0.5px; line-height: 1; }
+    .shelf-unit-block { display: flex; flex-direction: column; align-items: flex-end; }
+    .shelf-unit-label { font-size: 4pt; color: var(--offwhite); opacity: .7; text-transform: uppercase; }
+    .shelf-unit { font-size: 7pt; font-weight: 800; color: var(--offwhite); text-transform: uppercase; }
+
+    /* A4 */
+    .wrap-a4 { display: block; margin: 0; padding: 0; }
+    .label-a4 {
+      display: flex; flex-direction: column;
+      width: 297mm; height: 210mm;
+      margin: 0; padding: 0;
+      page-break-after: always; break-after: page;
+      overflow: hidden;
+    }
+    .label-a4:last-child { page-break-after: avoid; break-after: avoid; }
+    .a4-top { display: flex; align-items: flex-start; justify-content: space-between; padding: 12pt 24pt 8pt; flex-shrink: 0; }
+    .a4-logo { font-size: 12pt; font-weight: 700; color: var(--azul); letter-spacing: 2px; text-transform: uppercase; }
+    .a4-obra { font-size: 7pt; color: var(--text-muted); margin-top: 2pt; }
+    .a4-fam-pill { font-size: 9pt; background: var(--offwhite); color: var(--azul); padding: 3pt 10pt; border-radius: 4pt; border: 0.3mm solid var(--border); }
+    .a4-divider { height: 0.5mm; background: var(--border); margin: 0 24pt; flex-shrink: 0; }
+    .a4-body { flex: 1; padding: 0 24pt; display: flex; align-items: center; overflow: hidden; min-height: 0; }
+    .a4-name { font-size: 54pt; font-weight: 800; color: var(--text-main); line-height: 1.1; letter-spacing: -1px; }
+    .a4-footer { height: 80pt; background: var(--azul); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+    .a4-code-block { display: flex; flex-direction: column; padding: 0 24pt; }
+    .a4-code-label { font-size: 8pt; color: var(--offwhite); opacity: .7; letter-spacing: .5px; text-transform: uppercase; }
+    .a4-code { font-size: 56pt; font-weight: 800; color: var(--offwhite); line-height: 1; letter-spacing: -1px; }
+    .a4-unit-block { display: flex; flex-direction: column; align-items: flex-end; padding: 0 24pt; min-width: 64pt; }
+    .a4-unit-label { font-size: 6pt; color: var(--offwhite); opacity: .7; text-transform: uppercase; }
+    .a4-unit { font-size: 22pt; font-weight: 800; color: var(--offwhite); text-transform: uppercase; }
+  `;
+
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><style>${CSS}</style></head><body>${labelsHtml}
+
+<script>
+function voltarMenu() {
+  if (window.opener && !window.opener.closed) {
+    window.opener.focus();
+    window.close();
+  } else {
+    window.close();
+  }
+}
+</script>
+</body></html>`);
+  win.document.close();
+  win.focus();
+  setTimeout(() => { win.print(); }, 600);
+}
+
+async function imprimirEConfirmar() {
+  abrirJanelaImpressao();
+  await registrarGeradas();
+  fecharModal();
+  pending = [];
+}
+
+async function salvarPDFeConfirmar() {
+  abrirJanelaImpressao();
+  await registrarGeradas();
+  fecharModal();
+  pending = [];
+}
+
+function updateStats() {
+  const total = ALL.length;
+  const done = ALL.filter(i=>generated[i.code]).length;
+  const pct = total>0 ? Math.round(done/total*100) : 0;
+  document.getElementById('sTotal').textContent = total;
+  document.getElementById('sGeradas').textContent = done;
+  document.getElementById('sPendentes').textContent = total-done;
+  document.getElementById('progFill').style.width = pct+'%';
+  document.getElementById('progPct').textContent = pct+'%';
+}
+
+async function resetarHistorico() {
+  const senha = prompt('Digite a senha para resetar o histórico de etiquetas geradas:');
+  if (senha === null) return;
+  if (false) {
+    toast('Senha incorreta.', 'err');
+    return;
+  }
+  const confirma = confirm('Tem certeza? Todo o histórico de etiquetas geradas será apagado e não poderá ser recuperado.');
+  if (!confirma) return;
+  generated = {};
+  await saveGen();
+  renderTable();
+  updateStats();
+  toast('✓ Histórico apagado com sucesso.', 'ok');
+}
+
+function fmtN(n) { if(n===undefined||n===null) return '—'; return n.toLocaleString('pt-BR',{maximumFractionDigits:4}); }
+
+function toast(msg, type='') {
+  const c = document.getElementById('toastCt');
+  const t = document.createElement('div');
+  t.className = 'toast'+(type?' '+type:'');
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(()=>t.remove(), 4000);
+}
+
+
+/* ===== IMPORTACAO PDF ===== */
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+function abrirImport() {
+  document.getElementById('importFeedback').textContent = '';
+  document.getElementById('importFeedback').className = 'import-feedback';
+  document.getElementById('importProgress').style.display = 'none';
+  document.getElementById('importProgressFill').style.width = '0%';
+  document.getElementById('pdfDrop').style.display = 'block';
+  document.getElementById('importOverlay').classList.add('open');
+  setupPdfDrop();
+}
+
+function fecharImport() {
+  document.getElementById('importOverlay').classList.remove('open');
+}
+
+function setupPdfDrop() {
+  const drop = document.getElementById('pdfDrop');
+  const input = document.getElementById('pdfInput');
+  if (drop._ready) return;
+  drop._ready = true;
+  drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('dragover'); });
+  drop.addEventListener('dragleave', () => drop.classList.remove('dragover'));
+  drop.addEventListener('drop', e => {
+    e.preventDefault(); drop.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type === 'application/pdf') processarPDF(file);
+    else toast('Selecione um arquivo PDF valido.', 'err');
+  });
+  input.addEventListener('change', e => { if (e.target.files[0]) processarPDF(e.target.files[0]); });
+}
+
+async function processarPDF(file) {
+  const drop = document.getElementById('pdfDrop');
+  const prog = document.getElementById('importProgress');
+  const fill = document.getElementById('importProgressFill');
+  const msg  = document.getElementById('importProgressMsg');
+  const fb   = document.getElementById('importFeedback');
+  drop.style.display = 'none';
+  prog.style.display = 'block';
+  fb.textContent = '';
+  try {
+    const buf = await file.arrayBuffer();
+    fill.style.width = '10%'; msg.textContent = 'Abrindo PDF...';
+    const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+    const total = pdf.numPages;
+    let allText = '';
+    for (let i = 1; i <= total; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      const byY = {};
+      for (const item of content.items) {
+        const y = Math.round(item.transform[5]);
+        if (!byY[y]) byY[y] = [];
+        byY[y].push({ x: item.transform[4], str: item.str });
+      }
+      const ys = Object.keys(byY).map(Number).sort((a,b) => b - a);
+      for (const y of ys) {
+        allText += byY[y].sort((a,b) => a.x - b.x).map(it => it.str).join(' ') + '\n';
+      }
+      fill.style.width = (10 + Math.round(i / total * 72)) + '%';
+      msg.textContent = 'Lendo pagina ' + i + ' de ' + total + '...';
+    }
+    fill.style.width = '88%'; msg.textContent = 'Extraindo insumos...';
+    const items = parseSiengeText(allText);
+    if (!items.length) throw new Error('Nenhum insumo encontrado. Verifique se o PDF é uma Ordem de Compra ou Relatório de Estoque do SIENGE.');
+    ALL.length = 0;
+    items.forEach(i => ALL.push(i));
+    const sel = document.getElementById('filterFamily');
+    while (sel.options.length > 1) sel.remove(1);
+    buildFamilyFilter();
+    renderTable();
+    updateStats();
+    fill.style.width = '100%';
+    setTimeout(() => {
+      fecharImport();
+      toast('✓ ' + items.length + ' insumos carregados do PDF!', 'ok');
+    }, 400);
+  } catch(e) {
+    prog.style.display = 'none';
+    drop.style.display = 'block';
+    fb.textContent = '✕ ' + e.message;
+    fb.className = 'import-feedback err';
+  }
+}
+
+function parseSiengeText(text) {
+  const isOC = /Ordem\s+de\s+Compra/i.test(text) || /Pedido\s+\d+/i.test(text);
+  return isOC ? parseOrdemCompra(text) : parseRelatorioEstoque(text);
+}
+
+function parseRelatorioEstoque(text) {
+  const items = [];
+  let fam = '', grp = '';
+  const UNITS = 'un|kg|m2|m3|m|l|br6|br3|vb|rl|cx|pct|cj|par|mlh|L|M|BR|pc|rol|dia|mes|MES|gl|gl5l';
+  const LINE_RE = new RegExp('^(\\d+)\\s*-\\s*(.+?)\\s+(' + UNITS + ')\\s+([\\d.,]+)\\s+([\\d.,]+)\\s+([\\d.,]+)', 'i');
+  const FAM_RE = /Fam[íi]lia\s*([\d.]+\s*-\s*.+)/i;
+  const GRP_RE = /Grupo\s*(\d+)\s*-\s*(.+)/i;
+  const pn = s => parseFloat(s.replace(/\./g,'').replace(',','.')) || 0;
+  for (const raw of text.split('\n')) {
+    const line = raw.trim();
+    if (!line) continue;
+    const gm = GRP_RE.exec(line);
+    if (gm) { grp = 'Grupo' + gm[1] + ' - ' + gm[2].trim(); continue; }
+    const fm = FAM_RE.exec(line);
+    if (fm) { fam = fm[1].trim(); continue; }
+    const m = LINE_RE.exec(line);
+    if (m) items.push({ code: m[1].trim(), name: m[2].trim(), unit: m[3].trim(), family: fam, group: grp, qty: pn(m[4]), custoMed: pn(m[5]), custoTot: pn(m[6]) });
+  }
+  return items;
+}
+
+function parseOrdemCompra(text) {
+  // pdf.js extrai em Y DESCENDENTE (de baixo para cima)
+  // Linha do insumo: "13413 - ROLO DE LA 30,0000un 86282 ..."
+  // Linhas ACIMA no texto = continuação do nome que vem ABAIXO na página
+  // Ordem real na página: nome_parte1 > nome_parte2 > linha_principal
+  // No texto extraído: linha_principal > nome_parte2 > nome_parte1
+
+  const items = [];
+  const pn = s => parseFloat((s||'').replace(/\./g,'').replace(',','.')) || 0;
+
+  let obra = '';
+  const obraM = /Obra\s*(\d+\s*-\s*[^\n]+)/i.exec(text);
+  if (obraM) obra = obraM[1].trim().replace(/\s+/g,' ').substring(0,50);
+
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+
+  const MAIN = /^(\d{4,6})\s*-\s*(.+?)\s+([\d.,]+)\s*(un|kg|m2|m3|m|l|vb|rl|cx|pct|cj|par|pc|rol|gl|und|unid|bd|lt|sc|m²|m³|br6|br3)\b/i;
+  const SKIP = /^\d{2}\/\d{2}\/\d{4}|^[\d.,]+$|^Adriano|^VEMD|^Insumo\s+Quant|^Unidade|^Ponto|^End\.\s+de|^Obra\d|^Inform|^Fax$|^Telefone|^CNPJ|^Endere|^Nome|^Faturar|^Cobran|^Fornec|^Pedido|^Ordem\s+de|\d{2}\/\d{2}\/\d{4}/i;
+
+  for (let i = 0; i < lines.length; i++) {
+    const m = MAIN.exec(lines[i]);
+    if (!m) continue;
+
+    const code = m[1];
+    let   name = m[2].trim();
+    const qty  = pn(m[3]);
+    const unit = m[4].toLowerCase();
+
+    // Continuações do nome estão nas linhas ANTERIORES (texto descendente)
+    // Mas na página real aparecem DEPOIS do nome principal
+    // Então adicionamos ao FINAL do nome, em ordem reversa
+    const extras = [];
+    for (let j = i - 1; j >= Math.max(0, i - 6); j--) {
+      const prev = lines[j].trim();
+      if (!prev || SKIP.test(prev)) continue;
+      if (/^\d{4,6}\s*-/.test(prev)) break;
+      if (/^(Cond\.|Total|Frete|Desc|Dt\.|Obs\.)/.test(prev)) break;
+      if (/[A-Za-zÀ-ú]/.test(prev)) extras.push(prev);
+      else break;
+    }
+    // extras está em ordem descendente, precisa inverter para ordem correta
+    extras.reverse();
+    if (extras.length) name = name + ' ' + extras.join(' ');
+
+    if (!items.find(x => x.code === code)) {
+      items.push({ code, name: name.trim().toUpperCase(), unit, family: obra, group: '', qty, custoMed: 0, custoTot: 0 });
+    }
+  }
+  return items;
+}
+
+// ── GATE DE SENHA ──
+}
+
+</script>
+
+
+</body></html>
